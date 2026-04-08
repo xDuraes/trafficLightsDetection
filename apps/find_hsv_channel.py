@@ -1,4 +1,4 @@
-from apps.constants.hsv_constants import (
+from constants.hsv_constants import (
     IMAGE_PATH, 
     WINDOW_TRACKBAR_NAME, WINDOW_ORIGINAL_IMAGE_NAME, WINDOW_MASK_IMAGE_NAME,
     LOWER_HUE_NAME, LOWER_SATURATION_NAME, LOWER_VALUE_NAME,
@@ -47,12 +47,15 @@ while True:
     cv.imshow(WINDOW_ORIGINAL_IMAGE_NAME, image)
     cv.imshow(WINDOW_MASK_IMAGE_NAME, mask)
 
+    key = cv.waitKey(1) & 0xFF
+
     # 'q' to exit
-    if cv.waitKey(1) & 0xFF == ord('q'):
+    if key == ord('q'):
         break
 
-# final values printed
-print(f"Lower: [{l_h}, {l_s}, {l_v}]")
-print(f"Upper: [{u_h}, {u_s}, {u_v}]")
+    # 'p' to print hsv values
+    elif key == ord('p'):
+        print(f"Lower: [{l_h}, {l_s}, {l_v}]")
+        print(f"Upper: [{u_h}, {u_s}, {u_v}]")
 
 cv.destroyAllWindows()
