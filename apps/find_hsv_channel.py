@@ -1,4 +1,4 @@
-from constants.hsv_contants import (
+from constants.hsv_constants import (
     FILE_PATH, 
     WINDOW_TRACKBAR_NAME, WINDOW_ORIGINAL_IMAGE_NAME, WINDOW_MASK_IMAGE_NAME,
     LOWER_HUE_NAME, LOWER_SATURATION_NAME, LOWER_VALUE_NAME,
