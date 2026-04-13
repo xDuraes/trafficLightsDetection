@@ -24,7 +24,8 @@ def detectTrafficLights(args):
         input_image_path = os.path.join(input_dir, image_name)
 
         original_img = cv.imread(input_image_path)
-        hsv_image = cv.cvtColor(original_img, cv.COLOR_BGR2HSV)
+        blurred_img = cv.bilateralFilter(original_img, d=9, sigmaColor=30, sigmaSpace=20)
+        hsv_image = cv.cvtColor(blurred_img, cv.COLOR_BGR2HSV)
 
         masked_image_green = applyMask(
             image=hsv_image,
