@@ -6,10 +6,11 @@ from constants.hsv_boundaries import (
     UPPER_GREEN, UPPER_YELLOW, UPPER_RED_START, UPPER_RED_END
 )
 from utils.arguments import parse_args
-from utils.image_modifiers import applyMask
+from utils.image_modifiers import applyMask, findAndDrawContours
 # non-native imports
 import cv2 as cv
 import numpy as np
+from tqdm import tqdm
 
 def detectTrafficLights(args):
     """
@@ -20,7 +21,7 @@ def detectTrafficLights(args):
     input_dir = args.input_dir
     images = os.listdir(input_dir)
 
-    for image_name in images:
+    for image_name in tqdm(images):
         input_image_path = os.path.join(input_dir, image_name)
 
         original_img = cv.imread(input_image_path)
@@ -47,6 +48,15 @@ def detectTrafficLights(args):
                 boundaries=(np.array(LOWER_RED_END), np.array(UPPER_RED_END))
             )
         )
+
+        img_contour = original_img
+        for mask in [masked_image_green, masked_image_yellow, masked_image_red]:
+
+            if mask is masked_image_green: color = (0, 255, 0)
+            elif mask is masked_image_yellow: color = (0, 255, 255)
+            else: color = (0, 0, 255)
+
+            img_contour = findAndDrawContours(img_contour, mask, color)
 
 if __name__ == '__main__':
     detectTrafficLights(parse_args())
