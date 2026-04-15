@@ -1,9 +1,16 @@
+# local modules
+from constants.contours import MIN_AREA_CONTOUR, CIRCULARITY_INTERVAL
+# non-native modules
 from cv2 import (
-    inRange, findContours, drawContours, HoughCircles, circle,
+    inRange, findContours, drawContours, HoughCircles, circle, contourArea, arcLength,
     RETR_TREE, CHAIN_APPROX_SIMPLE, HOUGH_GRADIENT
-    )
+)
 from cv2.typing import MatLike
-import numpy as np
+from numpy import(
+    around,
+    uint16, 
+    pi
+)
 
 def applyMask(image:MatLike, boundaries:tuple) -> MatLike:
     """
@@ -22,6 +29,36 @@ def applyMask(image:MatLike, boundaries:tuple) -> MatLike:
 
     return masked_image
 
+def _validate_contours(contour, minArea:int=50, circularityInterval:tuple=(0.7, 1.2)):
+    """
+    Function to validate the area and circularity of a contour
+    
+    :param contour: A contour of the contours returned by findContours()
+    :param minArea: Minimum area required for a contour to be considered
+    :type minArea: int
+    :param circularityInterval: Tuple containing the minimum and maximum circularity for a contour to be validated, respectivelly
+    :type circularityInterval: tuple
+    """
+    # Small noise filtering
+    area = contourArea(contour)
+    if area < minArea: 
+        return False
+
+    # circularity calculation
+    perimeter = arcLength(contour, True)
+    # safety check for zero division error
+    if perimeter == 0:
+        return False
+
+    circularity = (4 * pi * area) / (perimeter ** 2)
+
+    # circularity validation
+    min_circularity, max_circularity = circularityInterval[0], circularityInterval[1]
+    if circularity < min_circularity or circularity > max_circularity:
+        return False
+    
+    return True
+
 def findAndDrawContours(image:MatLike, masked_image:MatLike, color:tuple):
     """
     Function to find and draw contours in an specific color. 
@@ -34,15 +71,20 @@ def findAndDrawContours(image:MatLike, masked_image:MatLike, color:tuple):
     :param color: BGR tuple containing the color in which the contours will be writen
     :type color: tuple
     """
-    contour, _ = findContours(
+    contours, _ = findContours(
         image=masked_image,
         mode=RETR_TREE,
         method=CHAIN_APPROX_SIMPLE
     )
-    
-    img_contour = drawContours(image, contour, -1, color, 3)
 
-    return img_contour 
+    valid_contours = []
+    for contour in contours:
+        if _validate_contours(contour, MIN_AREA_CONTOUR, CIRCULARITY_INTERVAL):
+            valid_contours.append(contour)
+
+    img_contour = drawContours(image, valid_contours, -1, color, 3)
+
+    return img_contour
 
 def findCircles(
         image:MatLike,
@@ -78,7 +120,7 @@ def drawCircles(image:MatLike, circles:MatLike, color:tuple, drawCenter:bool):
 
     # circle drawing in image
     if circles is not None:
-        circles = np.uint16(np.around(circles))
+        circles = uint16(around(circles))
         for i in circles[0, :]:
             center = (i[0], i[1])
             # circle center

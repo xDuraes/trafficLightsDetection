@@ -1,13 +1,13 @@
-# native imports
-import os
-# local imports
+# local modules
 from constants.hsv_boundaries import (
     LOWER_GREEN, LOWER_YELLOW, LOWER_RED_START, LOWER_RED_END,
     UPPER_GREEN, UPPER_YELLOW, UPPER_RED_START, UPPER_RED_END
 )
 from utils.arguments import parse_args
-from utils.image_modifiers import applyMask, findAndDrawContours
-# non-native imports
+from utils.image_modifiers import applyMask, findAndDrawContours, findCircles, drawCircles
+# native modules
+import os
+# non-native modules
 import cv2 as cv
 import numpy as np
 from tqdm import tqdm
@@ -49,7 +49,7 @@ def detectTrafficLights(args):
             )
         )
 
-        img_contour = original_img
+        img_contour = original_img.copy()
         for mask in [masked_image_green, masked_image_yellow, masked_image_red]:
 
             if mask is masked_image_green: color = (0, 255, 0)
