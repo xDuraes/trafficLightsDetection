@@ -191,7 +191,7 @@ def findTrafficLightContour(image:MatLike, circleContour:ndarray, color:tuple[in
     if not contours:
         return None
     
-    min_area = (width_circle * height_circle) * 1.5
+    min_area = (width_circle * height_circle) * 0.1
     borders_candidates = []
     
     for contour in contours:
