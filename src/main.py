@@ -4,7 +4,7 @@ from constants.hsv_boundaries import (
     UPPER_GREEN, UPPER_YELLOW, UPPER_RED_START, UPPER_RED_END
 )
 from utils.arguments import parse_args
-from utils.image_modifiers import applyMask, findAndDrawContours, findCircles, drawCircles
+from utils.image_modifiers import applyMask, returnContours, validateContours, findTrafficLightContour, drawBoxesInImage
 # native modules
 import os
 # non-native modules
@@ -49,14 +49,26 @@ def detectTrafficLights(args):
             )
         )
 
-        img_contour = original_img.copy()
+        final_image = original_img.copy()
         for mask in [masked_image_green, masked_image_yellow, masked_image_red]:
 
             if mask is masked_image_green: color = (0, 255, 0)
             elif mask is masked_image_yellow: color = (0, 255, 255)
             else: color = (0, 0, 255)
 
-            img_contour = findAndDrawContours(img_contour, mask, color)
+            contours = returnContours(mask)
+
+            validated_contours = []
+            for contour in contours:
+                if validateContours(contour=contour, circularityInterval=(0.6, 1.3)):
+                    validated_contours.append(contour)
+
+            for contour in validated_contours:
+                traffic_light_box = findTrafficLightContour(image=original_img, circleContour=contour, color=color)
+                if traffic_light_box:
+                    final_image = drawBoxesInImage(image=final_image, box=traffic_light_box, color=color) 
+
+        cv.imwrite(f"undefined_output_path", final_image)
 
 if __name__ == '__main__':
     detectTrafficLights(parse_args())
