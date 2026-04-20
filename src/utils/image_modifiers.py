@@ -82,6 +82,16 @@ def returnContours(masked_image:MatLike):
     return contours
 
 def drawContoursInImage(image:MatLike, contours:ndarray, color:tuple[int,int,int]):
+    """
+    Function to draw given contours into an image
+
+    :param image: Image in which the contours will be drawn
+    :type image: MatLike
+    :param contours: Contours to be drawn
+    :type contours: ndarray
+    :param color: Color to draw the contours
+    :type color: tuple[int, int, int]
+    """
 
     img_contour = drawContours(image, contours, -1, color, 3)
 
@@ -97,8 +107,23 @@ def findCircles(
         maxRadius:int,
 ):
     """
+    Function to find circles in an image, better used in masked images
     
-    """  
+    :param image: Image in which the circles will be searched
+    :type image: MatLike
+    :param dp: dp parameter for HoughCircles function
+    :type dp: float
+    :param minDist: Min distance in between circles
+    :type minDist: float
+    :param param1: param1 parameter for HoughCircles function
+    :type param1: float
+    :param param2: param2 parameter for HoughCircles function
+    :type param2: float
+    :param minRadius: Min radius for a circle to be considered
+    :type minRadius: int
+    :param maxRadius: Max radius for a circle to be considered
+    :type maxRadius: int
+    """
     
     # circle detection
     circles = HoughCircles(
@@ -115,6 +140,18 @@ def findCircles(
     return circles
 
 def drawCircles(image:MatLike, circles:MatLike, color:tuple[int,int,int], drawCenter:bool):
+    """
+    Function to draw circles in an image
+    
+    :param image: Image in which the circles will be drawn
+    :type image: MatLike
+    :param circles: Contours of the circles to be drawn
+    :type circles: MatLike
+    :param color: Color in which the circles will be drawn
+    :type color: tuple[int, int, int]
+    :param drawCenter: Boolean to determine if a dot will be drawn in the center of the circle
+    :type drawCenter: bool
+    """
     
     if color not in [(0, 255, 0), (0, 255, 255), (0, 0, 255)]:
         raise ValueError(f"Color {color} does not exist in a traffic light")
@@ -134,6 +171,16 @@ def drawCircles(image:MatLike, circles:MatLike, color:tuple[int,int,int], drawCe
     return image
 
 def findTrafficLightContour(image:MatLike, circleContour:ndarray, color:tuple[int,int,int] = None):
+    """
+    Function to find the retangular contour of the traffic light
+    
+    :param image: Image in which the retangular contour will be searched
+    :type image: MatLike
+    :param circleContour: Contours of the circles inside the traffic light
+    :type circleContour: ndarray
+    :param color: Color to draw the contour
+    :type color: tuple[int, int, int]
+    """
 
     x_top_left_circle, y_top_left_circle, width_circle, height_circle = boundingRect(circleContour)
 
@@ -224,6 +271,16 @@ def findTrafficLightContour(image:MatLike, circleContour:ndarray, color:tuple[in
     return (area_x + hx, area_y + hy, hw, hh)
 
 def drawBoxesInImage(image:MatLike, box:list[tuple[int,int,int,int]], color:tuple[int,int,int]):
+    """
+    Function to draw rectangles in an image
+    
+    :param image: Image in which the rectangles will be drawn
+    :type image: MatLike
+    :param box: A tuple containing the informations refering to the rectangle (x top left, y top left, width, height)
+    :type box: list[tuple[int, int, int, int]]
+    :param color: Color in which the rectangle will be drawn
+    :type color: tuple[int, int, int]
+    """
     
     if color not in [(0, 255, 0), (0, 255, 255), (0, 0, 255)]:
         raise ValueError(f"Color '{color}' not supported")
