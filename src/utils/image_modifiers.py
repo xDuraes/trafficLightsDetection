@@ -1,5 +1,5 @@
 # local modules
-from constants.contours import MIN_AREA_CONTOUR, CIRCULARITY_INTERVAL, COLOR2POSITION
+from constants.contours import COLOR2POSITION
 # non-native modules
 from cv2 import (
     inRange, findContours, drawContours, HoughCircles, circle, contourArea, arcLength, boundingRect, cvtColor, 
