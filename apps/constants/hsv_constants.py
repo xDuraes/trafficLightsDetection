@@ -1,5 +1,5 @@
 # path to image to be analyzed 
-FILE_PATH = '/home/duraes/pucrs/5th_semester/comp_vision/trafficLightsDetection/S2TLD（720x1280）/normal_1/JPEGImages/000013.jpg'
+IMAGE_PATH = ''
 
 WINDOW_TRACKBAR_NAME = 'HSV Trackbars'
 WINDOW_ORIGINAL_IMAGE_NAME = 'Input Image'

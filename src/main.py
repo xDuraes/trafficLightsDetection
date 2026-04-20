@@ -69,7 +69,9 @@ def detectTrafficLights(args):
                 traffic_light_box = findTrafficLightContour(image=original_img, circleContour=contour, color=color)
                 if traffic_light_box:
                     final_image = drawBoxesInImage(image=final_image, box=traffic_light_box, color=color) 
+
         output_path = os.path.join(output_dir, image_name)
+
         cv.imwrite(output_path, final_image)
 
 if __name__ == '__main__':
