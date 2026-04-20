@@ -20,6 +20,8 @@ def detectTrafficLights(args):
     """
     input_dir = args.input_dir
     images = os.listdir(input_dir)
+    output_dir = args.output_dir
+    os.makedirs(output_dir, exist_ok=True)
 
     for image_name in tqdm(images):
         input_image_path = os.path.join(input_dir, image_name)
@@ -67,8 +69,8 @@ def detectTrafficLights(args):
                 traffic_light_box = findTrafficLightContour(image=original_img, circleContour=contour, color=color)
                 if traffic_light_box:
                     final_image = drawBoxesInImage(image=final_image, box=traffic_light_box, color=color) 
-
-        cv.imwrite(f"undefined_output_path", final_image)
+        output_path = os.path.join(output_dir, image_name)
+        cv.imwrite(output_path, final_image)
 
 if __name__ == '__main__':
     detectTrafficLights(parse_args())
